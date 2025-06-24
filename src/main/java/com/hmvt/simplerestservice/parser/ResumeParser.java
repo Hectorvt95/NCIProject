@@ -34,15 +34,6 @@ public class ResumeParser {
     @Autowired
     private LightcastSkillsService lightcastSkillsService;
     
-    // Common job titles
-    private static final String[] JOB_TITLES = {
-        "Software Engineer", "Software Developer", "Senior Developer", "Lead Developer",
-        "Full Stack Developer", "Frontend Developer", "Backend Developer", "Web Developer",
-        "Data Scientist", "Data Analyst", "Machine Learning Engineer", "DevOps Engineer",
-        "Project Manager", "Product Manager", "Technical Lead", "Engineering Manager",
-        "QA Engineer", "Test Engineer", "System Administrator", "Database Administrator",
-        "UX Designer", "UI Designer", "Business Analyst", "Solutions Architect",
-        "Cloud Engineer", "Security Engineer", "Mobile Developer", "Game Developer"};
     
     // Parse resume from file path
     public ResumeInfo parseResume(String filePath) throws IOException {
@@ -71,9 +62,6 @@ public class ResumeParser {
         ResumeInfo info = new ResumeInfo();
         System.out.println("Extracted content length: " + content.length());
 
-        // Extract job titles
-        info.setJobTitles(extractJobTitles(content));
-        
         // Extract skills using Lightcast API
         info.setSkills(extractSkills(content));
         
@@ -82,26 +70,10 @@ public class ResumeParser {
         
         // Extract locations
         info.setLocations(extractLocations(content));
-        
-        // Extract job experiences
-        info.setJobExperiences(extractJobExperiences(content));
-        
+
         return info;
     }
     
-    private List<String> extractJobTitles(String content) {
-        //this set<> works like a hash map but doesnt allow duplicated values
-        Set<String> foundTitles = new HashSet<>();
-        String lowerContent = content.toLowerCase();
-        
-        for (String title : JOB_TITLES) {
-            if (lowerContent.contains(title.toLowerCase())) {
-                foundTitles.add(title);
-            }
-        }
-        
-        return new ArrayList<>(foundTitles);
-    }
     
     private List<String> extractSkills(String content) {
         Set<String> foundSkills = new HashSet<>();
@@ -158,29 +130,6 @@ public class ResumeParser {
         return locations.isEmpty() ? null : new ArrayList<>(locations);//if there is no location specified, put it null
     }
     
-    private List<JobExperience> extractJobExperiences(String content) {
-        List<JobExperience> experiences = new ArrayList<>();
-        
-        // Pattern to match job experience sections
-        Pattern expPattern = Pattern.compile(
-            "([A-Za-z\\s,]+?)\\s+(?:at|@)\\s+([A-Za-z\\s&.,]+?)\\s*(?:\\n|\\r|$|\\d{4}|\\d{1,2}/\\d{4})", 
-            Pattern.CASE_INSENSITIVE
-        );
-        
-        Matcher matcher = expPattern.matcher(content);
-        while (matcher.find()) {
-            String title = matcher.group(1).trim();
-            String company = matcher.group(2).trim();
-            
-            if (title.length() > 5 && title.length() < 50 && 
-                company.length() > 2 && company.length() < 50) {
-                
-                experiences.add(new JobExperience(title, company, "Not specified", "Not specified"));
-            }
-        }
-        
-        return experiences;
-    }
     
    
 }

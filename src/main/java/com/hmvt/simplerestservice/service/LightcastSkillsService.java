@@ -100,66 +100,79 @@ public class LightcastSkillsService {
     
     
     // Get all skills from Lightcast Skills API
-    private Set<String> getAllSkills() throws IOException, InterruptedException {
-        System.out.println("Fetching skills from Skills API...");
+       private Set<String> getAllSkills() throws IOException, InterruptedException {
+        System.out.println("Fetching all skills from API (this may take a moment)...");
         
-        String skillsUrl = SKILLS_API_URL + "/skills";
         Set<String> allSkills = new HashSet<>();
         
-        // Get skills in batches (the API might paginate)
-        String nextUrl = skillsUrl + "?limit=1000"; // Start with first page
+        // First, try without pagination to see the response structure
+        System.out.println("Testing API response structure...");
+        String skillsUrl = SKILLS_API_URL + "/skills";
         
-        while (nextUrl != null && allSkills.size() < 5000) { // Limit to prevent excessive API calls
-            HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create(nextUrl))
-                    .header("Authorization", "Bearer " + accessToken)
-                    .header("Accept", "application/json")
-                    .GET()
-                    .build();
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(skillsUrl))
+                .header("Authorization", "Bearer " + accessToken)
+                .header("Accept", "application/json")
+                .GET()
+                .build();
+        
+        HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+        
+        System.out.println("Skills API Response Status: " + response.statusCode());
+        
+        if (response.statusCode() == 200) {
+            JsonNode skillsResponse = objectMapper.readTree(response.body());
             
-            HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+            // Print response structure for debugging
+            System.out.println("Response structure keys: ");
+            skillsResponse.fieldNames().forEachRemaining(field -> System.out.println("  - " + field));
             
-            if (response.statusCode() == 200) {
-                JsonNode skillsResponse = objectMapper.readTree(response.body());
-                JsonNode skillsArray = skillsResponse.get("data");
-                
-                if (skillsArray != null && skillsArray.isArray()) {
-                    for (JsonNode skill : skillsArray) {
-                        String skillName = skill.get("name").asText();
-                        allSkills.add(skillName.toLowerCase()); // Store in lowercase for matching
+            // get all skills from this single response
+            JsonNode skillsArray = skillsResponse.get("data");
+            if (skillsArray == null) {
+                skillsArray = skillsResponse.get("skills");
+            }
+
+            if (skillsArray != null && skillsArray.isArray()) {
+                System.out.println("Found " + skillsArray.size() + " skills in single response");
+                for (JsonNode skill : skillsArray) {
+                    String skillName = skill.get("name").asText().trim();
+                    if (skillName != null) {
+                        allSkills.add(skillName);
                     }
                 }
-                
-                // Check for next page
-                JsonNode links = skillsResponse.get("links");
-                nextUrl = (links != null && links.has("next")) ? links.get("next").asText() : null;
-                
-                System.out.println("Loaded " + allSkills.size() + " skills so far...");
-  
             } else {
-                System.err.println("Failed to fetch skills: HTTP " + response.statusCode());
-                break;
+                System.out.println("No skills array found. Available fields:");
+                skillsResponse.fieldNames().forEachRemaining(System.out::println);
             }
+            
+        } else {
+            System.err.println("Failed to fetch skills: HTTP " + response.statusCode());
+            System.err.println("Response body: " + response.body());
         }
         
-        System.out.println("Total skills loaded: " + allSkills.size());
+        System.out.println("🎉 Successfully loaded " + allSkills.size() + " total skills from Lightcast API!");
+        
         return allSkills;
     }
     
-   
-    
+  
+     
     // Match skills in text against the skills database extracted from the API
     private Set<String> matchSkillsInText(String text, Set<String> allSkills) {
         Set<String> foundSkills = new HashSet<>();
         String lowerText = text.toLowerCase();
         
-        // Direct matching
+        // Match skills against the text
         for (String skill : allSkills) {
-            if (lowerText.contains(skill)) {
-                // Capitalize first letter for display
-                String displaySkill = skill.substring(0, 1).toUpperCase() + skill.substring(1);
-                foundSkills.add(displaySkill);
+            if (lowerText.contains(skill.toLowerCase())) {
+                foundSkills.add(skill);
             }
+        }
+        
+        System.out.println("Matched skills:");
+        for (String skill : foundSkills) {
+            System.out.println("  - " + skill);
         }
         
         return foundSkills;

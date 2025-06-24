@@ -38,7 +38,6 @@ public class ResumeService {
             // Log successful parsing
             System.out.println("Successfully parsed resume: " + filePath);
             System.out.println("Found " + resumeInfo.getSkills().size() + " skills");
-            System.out.println("Found " + resumeInfo.getJobTitles().size() + " job titles");
             
             return resumeInfo; 
             
@@ -100,9 +99,7 @@ public class ResumeService {
         StringBuilder summary = new StringBuilder();
         summary.append("=== RESUME SUMMARY ===\n");
         summary.append("Skills found: ").append(resumeInfo.getSkills().size()).append("\n");
-        summary.append("Job titles found: ").append(resumeInfo.getJobTitles().size()).append("\n");
         summary.append("Locations found: ").append(resumeInfo.getLocations().size()).append("\n");
-        summary.append("Job experiences found: ").append(resumeInfo.getJobExperiences().size()).append("\n");
         summary.append("Education: ").append(resumeInfo.getLatestEducation()).append("\n");
         
         if (!resumeInfo.getSkills().isEmpty()) {

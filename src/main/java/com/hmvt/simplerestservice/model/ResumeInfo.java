@@ -13,25 +13,16 @@ import java.util.List;
  */
 public class ResumeInfo {
     
-    private List<String> jobTitles;
     private List<String> skills;
     private String latestEducation;
     private List<String> locations;
-    private List<JobExperience> jobExperiences;
 
     public ResumeInfo() {
-        this.jobTitles = new ArrayList<>();
         this.skills = new ArrayList<>();
         this.locations = new ArrayList<>();
-        this.jobExperiences = new ArrayList<>();
     }
 
     // Getters and setters
-    public List<String> getJobTitles() { return jobTitles; }
-    public void setJobTitles(List<String> jobTitles) {
-        this.jobTitles = jobTitles; 
-    }
-
     public List<String> getSkills() { return skills; }
     public void setSkills(List<String> skills) { 
         this.skills = skills; 
@@ -47,24 +38,13 @@ public class ResumeInfo {
         this.locations = locations; 
     }
 
-    public List<JobExperience> getJobExperiences() { return jobExperiences; }
-    public void setJobExperiences(List<JobExperience> jobExperiences) {
-        this.jobExperiences = jobExperiences; 
-    }
-
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append("=== RESUME ANALYSIS ===\n");
-        sb.append("Job Titles: ").append(jobTitles).append("\n");
         sb.append("Skills: ").append(skills).append("\n");
         sb.append("Latest Education: ").append(latestEducation).append("\n");
         sb.append("Locations: ").append(locations).append("\n");
-        sb.append("Job Experiences:\n");
-        
-        for (JobExperience exp : jobExperiences) {
-            sb.append("  - ").append(exp).append("\n");
-        }
         return sb.toString();
     }
     
