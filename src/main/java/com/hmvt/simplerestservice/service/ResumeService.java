@@ -29,6 +29,8 @@ public class ResumeService {
      * @return ResumeInfo containing extracted information
      * @throws IOException if file cannot be read
      */
+    
+    
     public ResumeInfo parseResumeFile(String filePath) throws IOException {
         try {
             ResumeInfo resumeInfo = resumeParser.parseResume(filePath);
@@ -38,7 +40,7 @@ public class ResumeService {
             System.out.println("Found " + resumeInfo.getSkills().size() + " skills");
             System.out.println("Found " + resumeInfo.getJobTitles().size() + " job titles");
             
-            return resumeInfo;
+            return resumeInfo; 
             
         } catch (IOException e) {
             System.err.println("Failed to parse resume file: " + filePath + " - " + e.getMessage());
@@ -127,8 +129,10 @@ public class ResumeService {
     public boolean testLightcastConnection() {
         try {
             // Test with a simple text containing known skills
-            String testContent = "Software Engineer with experience in Java, Python, and React";
-            ResumeInfo testResult = resumeParser.parseResume("test_resume.txt"); // This would be a test file
+            //String testContent = "Software Engineer with experience in Java, Python, and React";
+            //ResumeInfo testResult = resumeParser.parseResume("test_resume.txt"); // This would be a test file
+            String fullPath = "C:\\Users\\marti\\OneDrive\\Documents\\NetBeansProjects\\DistSyst\\Project_CvService\\src\\main\\resources\\test_resume.pdf";
+            ResumeInfo testResult = resumeParser.parseResume(fullPath); // This would be a test file
             
             // If we get skills back, API is working
             return !testResult.getSkills().isEmpty();

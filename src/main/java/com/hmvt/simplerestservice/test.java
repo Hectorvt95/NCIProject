@@ -5,6 +5,7 @@
 package com.hmvt.simplerestservice;
 //import com.hmvt.simplerestservice.model.ResumeInfo;
 import com.hmvt.simplerestservice.parser.ResumeParser;
+import com.hmvt.simplerestservice.service.ResumeService;
 import java.io.IOException;
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.ConfigurableApplicationContext;
@@ -18,36 +19,17 @@ public class test {
     public static void main(String[] args) {
             // Start Spring Boot context to get proper dependency injection
             ConfigurableApplicationContext context = SpringApplication.run(SimpleRestServiceApplication.class, args);
-            
-/*
-            ResumeParser newParse = new ResumeParser();
-
-
-            String fullPath = "C:\\Users\\marti\\OneDrive\\Documents\\NetBeansProjects\\DistSyst\\SimpleRestService\\src\\main\\resources\\cv.pdf";
-            try{
-                System.out.println(newParse.parseResume(fullPath));
-            }catch(IOException e){
-                System.out.println("Something went wrong\n" + e);
-            }
-*/           
+                  
            
            try {
                // Get the ResumeParser bean from Spring context (with all dependencies injected)
-               ResumeParser resumeParser = context.getBean(ResumeParser.class);
-
-               String fullPath = "C:\\Users\\marti\\OneDrive\\Documents\\NetBeansProjects\\DistSyst\\SimpleRestService\\src\\main\\resources\\cv.pdf";
-
+               ResumeService resumeService = context.getBean(ResumeService.class);
+               //String fullPath = "C:\\Users\\marti\\OneDrive\\Documents\\NetBeansProjects\\DistSyst\\Project_CvService\\src\\main\\resources\\cv.pdf";
                System.out.println("=== TESTING RESUME PARSER ===");
+   
+               System.out.println(resumeService.testLightcastConnection());
                
-               //ResumeInfo result = resumeParser.parseResume(fullPath);
-               
-               //System.out.println(result);
-
-               System.out.println(resumeParser.readFile(fullPath));
-               
-           } catch(IOException e) {
-               System.out.println("Something went wrong\n" + e);
-           } catch(Exception e) {
+           }  catch(Exception e) {
                System.out.println("Spring context error: " + e.getMessage());
            } finally {
                // Close Spring context
