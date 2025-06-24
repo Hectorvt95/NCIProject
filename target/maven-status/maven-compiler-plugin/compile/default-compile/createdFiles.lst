@@ -1,0 +1,11 @@
+com\example\simplerestservice\model\ResumeInfo.class
+com\example\simplerestservice\controller\ResumeController.class
+com\example\simplerestservice\service\LightcastSkillsService.class
+com\example\simplerestservice\test.class
+com\example\simplerestservice\config\LightcastConfig.class
+com\example\simplerestservice\controller\HelloController.class
+com\example\simplerestservice\model\JobExperience.class
+com\example\simplerestservice\parser\ResumeParser.class
+com\example\simplerestservice\config\LightcastProperties.class
+com\example\simplerestservice\service\ResumeService.class
+com\example\simplerestservice\SimpleRestServiceApplication.class
