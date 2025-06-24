@@ -3,7 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package com.hmvt.simplerestservice;
-import com.hmvt.simplerestservice.model.ResumeInfo;
+//import com.hmvt.simplerestservice.model.ResumeInfo;
 import com.hmvt.simplerestservice.parser.ResumeParser;
 import java.io.IOException;
 import org.springframework.boot.SpringApplication;
